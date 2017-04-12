@@ -3,6 +3,8 @@ services:
   jobservice:
     environment:
       SSL_TOMCAT_CA_CERT_LOCATION: /keystore/tomcat.keystore
+      SSL_TOMCAT_CA_CERT_KEYSTOREPASS: ${JOB_SERVICE_KEYSTOREPASS:-changeit}
+      SSL_TOMCAT_CA_CERT_KEYSTORE_ALIAS: ${JOB_SERVICE_KEYSTORE_ALIAS:-tomcat}
     volumes:
       - ${JOB_SERVICE_KEYSTORE:-./keystore/.keystore}:/keystore/tomcat.keystore
     ports:

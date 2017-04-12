@@ -222,4 +222,15 @@ Additional override parameters can be set and their function is described below.
     <td>./keystore/.keystore</td>
     <td>If you are activating the HTTPS port, you can override the default keystore location to provide your own keystore as a volume. This is the path of the keystore file (i.e. `./mykeystore/ks.p12`).</td>
   </tr>
+  <tr>
+    <td>JOB_SERVICE_KEYSTOREPASS</td>
+    <td>changeit</td>
+    <td>If you generated your keystore with a custom keystorepass, use this environment variable to update the Job Service's keystore configuration in the `server.xml`</td>
+  </tr>
+  <tr>
+    <td>JOB_SERVICE_KEYSTORE_ALIAS</td>
+    <td>tomcat</td>
+    <td>If you generated your keystore with a custom keystore alias, use this environment variable to update the Job Service's keystore configuration in the `server.xml`</td>
+  </tr>
+</table>
 </table>
