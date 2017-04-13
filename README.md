@@ -194,7 +194,9 @@ You can generate a default keystore setting both the keystore password and key p
 
 `keytool -genkey -alias tomcat -keystore .keystore -keyalg RSA`
 
-Generating a custom keystore with your own password/alias/protocol is not currently supported. For more information on generating keystores see these [instructions](https://tomcat.apache.org/tomcat-7.0-doc/ssl-howto.html).
+For more information on generating keystores see these [instructions](https://tomcat.apache.org/tomcat-7.0-doc/ssl-howto.html).
+
+If you have generated the keystore with custom keystore pass, alias or key pass, you must set the environment variables described below.
 
 Place this keystore file in a folder called `keystore` in job-service-deploy. Name it `.keystore` or else provide your own custom path by setting `JOB_SERVICE_KEYSTORE` (e.g. `./mykeystore/ks.p12`).
 
