@@ -225,7 +225,12 @@ Additional override parameters can be set and their function is described below.
   <tr>
     <td>JOB_SERVICE_KEYSTOREPASS</td>
     <td>changeit</td>
-    <td>If you generated your keystore with a custom keystorepass, use this environment variable to update the Job Service's keystore configuration in the `server.xml`</td>
+    <td>Set this environment variable to the keystore pass set when creating the keystore. The default assumes you have set the default "changeit" pass when creating the keystore.</td>
+  </tr>
+  <tr>
+    <td>JOB_SERVICE_KEY_PASS</td>
+    <td>changeit</td>
+    <td>Set this environment variable to the key pass set when creating the keystore, which may be different from the keystore pass. The default is "changeit".</td>
   </tr>
   <tr>
     <td>JOB_SERVICE_KEYSTORE_ALIAS</td>
@@ -233,4 +238,4 @@ Additional override parameters can be set and their function is described below.
     <td>If you generated your keystore with a custom keystore alias, use this environment variable to update the Job Service's keystore configuration in the `server.xml`</td>
   </tr>
 </table>
-</table>
+
