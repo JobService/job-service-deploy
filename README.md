@@ -226,11 +226,11 @@ Additional override parameters can be set and their function is described below.
 
 #### Providing your own server.xml
 
-You can provide your own server.xml by running the `docker-compose.serverxml.yml` override.
+You can provide your own server.xml in the same job-service-deploy directory by running the `docker-compose.serverxml.yml` override.
 
 `docker-compose -f docker-compose.yml -f docker-compose.https.yml -f docker-compose.serverxml.yml up`
 
-You must set the following environment variable with the location of the server.xml you want to provide:
+You can use a different path by setting the following environment variable to the location of the server.xml you want to provide:
 
 <table>
   <tr>
@@ -240,7 +240,7 @@ You must set the following environment variable with the location of the server.
   </tr>
   <tr>
     <td>JOB_SERVICE_SERVER_XML</td>
-    <td>no default</td>
-    <td>This is the relative path of the server.xml you want to provide, i.e. `./server.xml`</td>
+    <td>./server.xml</td>
+    <td>This is the relative path of the server.xml you want to provide.</td>
   </tr>
 </table>

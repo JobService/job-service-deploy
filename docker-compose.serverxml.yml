@@ -2,4 +2,4 @@ version: '3'
 services:
   jobservice:
     volumes:
-      - ${JOB_SERVICE_SERVER_XML}:/usr/local/tomcat/conf/server.xml
+      - ${JOB_SERVICE_SERVER_XML:-./server.xml}:/usr/local/tomcat/conf/server.xml
