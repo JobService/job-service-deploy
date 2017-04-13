@@ -222,6 +222,7 @@ Additional override parameters can be set and their function is described below.
     <td>./keystore/.keystore</td>
     <td>If you are activating the HTTPS port, you can override the default keystore location to provide your own keystore as a volume. This is the path of the keystore file (i.e. `./mykeystore/ks.p12`).</td>
   </tr>
+</table>
 
 #### Providing your own server.xml
 
