@@ -35,7 +35,7 @@
 				"CAF_DATABASE_PASSWORD": "${postgres_job_service_db_password}",
 				"CAF_TRACKING_PIPE": "${jobtracking_inputqueue}",
 				"CAF_STATUS_CHECK_TIME": "${job_service_status_check_time}",
-				"CAF_WEBSERVICE_URL": "http://${caf_web_service}:8080/job-service/v1",
+				"CAF_WEBSERVICE_URL": "http://jobservice:8080/job-service/v1",
 				"CAF_RABBITMQ_HOST": "${rabbit_host}",
 				"CAF_RABBITMQ_PORT": "${rabbit_port}",
 				"CAF_RABBITMQ_USERNAME": "${rabbit_user}",
