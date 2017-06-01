@@ -47,7 +47,10 @@ The `docker-stack.yml` file specifies default values for a number of additional 
 ## Execution
 
 To deploy the stack:  
-* `docker stack deploy --compose-file=docker-stack.yml jobServiceProd`
+* Edit `rabbit.env`  
+* Edit `docker-stack.env`  
+* `source docker-stack.env`  
+* `docker stack deploy --compose-file=docker-stack.yml jobServiceProd`  
 
 To tear down the stack:  
 * `docker stack rm jobServiceProd`
