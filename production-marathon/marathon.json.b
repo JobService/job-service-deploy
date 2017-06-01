@@ -8,7 +8,7 @@
 			"instances": 1,
 			"container": {
 				"docker": {
-					"image": "${docker_registry}/jobservice/job-service",
+					"image": "${docker_registry}/jobservice/job-service:2.0.0",
 					"network": "BRIDGE",
 					"portMappings": [{
 						"containerPort": 8080,
@@ -30,13 +30,12 @@
 			}],
 			"env": {
 				"_JAVA_OPTIONS": "-Xms512m -Xmx512m",
-				"CAF_CONFIG_PATH": "/mnt/mesos/sandbox",
-				"CAF_DATABASE_URL": "jdbc:postgresql://${postgres_db_hostname}:${postgres_db_port}/jobservicedb?characterEncoding=UTF8&rewriteBatchedStatements=true",
+				"CAF_DATABASE_URL": "jdbc:postgresql://${postgres_db_hostname}:${postgres_db_port}/jobservice",
 				"CAF_DATABASE_USERNAME": "${postgres_job_service_db_user}",
 				"CAF_DATABASE_PASSWORD": "${postgres_job_service_db_password}",
 				"CAF_TRACKING_PIPE": "${jobtracking_inputqueue}",
 				"CAF_STATUS_CHECK_TIME": "${job_service_status_check_time}",
-				"CAF_WEBSERVICE_URL": "http://${internal_proxy_host}:26080/job-service/v1",
+				"CAF_WEBSERVICE_URL": "http://${caf_web_service}:8080/job-service/v1",
 				"CAF_RABBITMQ_HOST": "${rabbit_host}",
 				"CAF_RABBITMQ_PORT": "${rabbit_port}",
 				"CAF_RABBITMQ_USERNAME": "${rabbit_user}",
@@ -51,7 +50,7 @@
 			"container": {
 				"type": "DOCKER",
 				"docker": {
-					"image": "${docker_registry}/jobservice/worker-jobtracking",
+					"image": "${docker_registry}/jobservice/worker-jobtracking:2.0.0",
 					"network": "BRIDGE",
 					"forcePullImage": ${force_pull},
 					"portMappings": [{
@@ -71,10 +70,16 @@
 			},
 			"env": {
 				"_JAVA_OPTIONS": "-Xms512m -Xmx512m",
-				"CAF_CONFIG_PATH": "/mnt/mesos/sandbox",
-				"JOB_DATABASE_URL": "jdbc:postgresql://${postgres_db_hostname}:${postgres_db_port}/jobservicedb?characterEncoding=UTF8&rewriteBatchedStatements=true",
+				"CAF_WORKER_INPUT_QUEUE": "${jobtracking_inputqueue}",
+				"CAF_WORKER_OUTPUT_QUEUE": "${jobtracking_outputqueue}",
+				"JOB_DATABASE_URL": "jdbc:postgresql://${postgres_db_hostname}:${postgres_db_port}/jobservice",
 				"JOB_DATABASE_USERNAME": "${postgres_job_service_db_user}",
-				"JOB_DATABASE_PASSWORD": "${postgres_job_service_db_password}"
+				"JOB_DATABASE_PASSWORD": "${postgres_job_service_db_password}",
+				"CAF_RABBITMQ_HOST": "${rabbit_host}",
+				"CAF_RABBITMQ_PORT": "${rabbit_port}",
+				"CAF_RABBITMQ_USERNAME": "${rabbit_user}",
+				"CAF_RABBITMQ_PASSWORD": "${rabbit_password}"
+				
 			},
 			"healthChecks": [{
 				"path": "/healthcheck",
@@ -95,6 +100,5 @@
 				"autoscale.backoff": "10"
 			}
 		}
-
 	]
 }
