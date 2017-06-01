@@ -1,104 +1,104 @@
 {
-	"id": "/caf/jobservice",
-	"apps": [{
-
-			"id": "job-service",
-			"cpus": 0.5,
-			"mem": 1024,
-			"instances": 1,
-			"container": {
-				"docker": {
-					"image": "${docker_registry}/jobservice/job-service:2.0.0",
-					"network": "BRIDGE",
-					"portMappings": [{
-						"containerPort": 8080,
-						"hostPort": 0,
-						"protocol": "tcp",
-						"servicePort": 9220
-					}],
-					"forcePullImage": ${force_pull}
-				},
-				"type": "DOCKER"
-			},
-			"healthChecks": [{
-				"protocol": "HTTP",
-				"gracePeriodSeconds": 300,
-				"intervalSeconds": 120,
-				"maxConsecutiveFailures": 5,
-				"path": "/",
-				"timeoutSeconds": 20
-			}],
-			"env": {
-				"_JAVA_OPTIONS": "-Xms512m -Xmx512m",
-				"CAF_DATABASE_URL": "jdbc:postgresql://${postgres_db_hostname}:${postgres_db_port}/jobservice",
-				"CAF_DATABASE_USERNAME": "${postgres_job_service_db_user}",
-				"CAF_DATABASE_PASSWORD": "${postgres_job_service_db_password}",
-				"CAF_TRACKING_PIPE": "${jobtracking_inputqueue}",
-				"CAF_STATUS_CHECK_TIME": "${job_service_status_check_time}",
-				"CAF_WEBSERVICE_URL": "http://jobservice:8080/job-service/v1",
-				"CAF_RABBITMQ_HOST": "${rabbit_host}",
-				"CAF_RABBITMQ_PORT": "${rabbit_port}",
-				"CAF_RABBITMQ_USERNAME": "${rabbit_user}",
-				"CAF_RABBITMQ_PASSWORD": "${rabbit_password}"
-			}
-		},
-		{
-			"id": "jobtracking",
-			"cpus": 0.1,
-			"mem": 1024,
-			"instances": 1,
-			"container": {
-				"type": "DOCKER",
-				"docker": {
-					"image": "${docker_registry}/jobservice/worker-jobtracking:2.0.0",
-					"network": "BRIDGE",
-					"forcePullImage": ${force_pull},
-					"portMappings": [{
+	"id": "caf",
+	"groups": [{
+		"id": "jobservice",
+		"apps": [{
+				"id": "job-service",
+				"cpus": 0.5,
+				"mem": 1024,
+				"instances": 1,
+				"container": {
+					"docker": {
+						"image": "${DOCKER_REGISTRY}/job-service:2.0.0",
+						"network": "BRIDGE",
+						"portMappings": [{
 							"containerPort": 8080,
 							"hostPort": 0,
 							"protocol": "tcp",
-							"servicePort": 9330
-						},
-						{
-							"containerPort": 8081,
-							"hostPort": 0,
-							"protocol": "tcp",
-							"servicePort": 9331
-						}
-					]
+							"servicePort": ${JOB_SERVICE_PORT}
+						}],
+						"forcePullImage": true
+					},
+					"type": "DOCKER"
+				},
+				"env": {
+					"_JAVA_OPTIONS": "-Xms512m -Xmx512m",
+					"CAF_DATABASE_URL": "jdbc:postgresql://${POSTGRES_DB_HOSTNAME}:${POSTGRES_DB_PORT}/jobservice",
+					"CAF_DATABASE_USERNAME": "${POSTGRES_JOB_SERVICE_DB_USER}",
+					"CAF_DATABASE_PASSWORD": "${POSTGRES_JOB_SERVICE_DB_PASSWORD}",
+					"CAF_TRACKING_PIPE": "jobtracking-in",
+					"CAF_STATUS_CHECK_TIME": "5",
+					"CAF_WEBSERVICE_URL": "http://jobservice:8080/job-service/v1",
+					"CAF_RABBITMQ_HOST": "${CAF_RABBITMQ_HOST}",
+					"CAF_RABBITMQ_PORT": "${CAF_RABBITMQ_PORT}",
+					"CAF_RABBITMQ_USERNAME": "${CAF_RABBITMQ_USERNAME}",
+					"CAF_RABBITMQ_PASSWORD": "${CAF_RABBITMQ_PASSWORD}"
+				},
+				"healthChecks": [{
+					"protocol": "HTTP",
+					"gracePeriodSeconds": 300,
+					"intervalSeconds": 120,
+					"maxConsecutiveFailures": 5,
+					"path": "/",
+					"timeoutSeconds": 20
+				}]
+			},
+			{
+				"id": "jobtracking",
+				"cpus": 0.1,
+				"mem": 1024,
+				"instances": 1,
+				"container": {
+					"type": "DOCKER",
+					"docker": {
+						"image": "${DOCKER_REGISTRY}/worker-jobtracking:2.0.0",
+						"network": "BRIDGE",
+						"forcePullImage": true,
+						"portMappings": [{
+								"containerPort": 8080,
+								"hostPort": 0,
+								"protocol": "tcp",
+								"servicePort": 9330
+							},
+							{
+								"containerPort": 8081,
+								"hostPort": 0,
+								"protocol": "tcp",
+								"servicePort": ${JOB_TRACKING_SERVICE_PORT}
+							}
+						]
+					}
+				},
+				"env": {
+					"_JAVA_OPTIONS": "-Xms512m -Xmx512m",
+					"CAF_WORKER_INPUT_QUEUE": "jobtracking-in",
+					"CAF_WORKER_OUTPUT_QUEUE": "jobtracking-out",
+					"JOB_DATABASE_URL": "jdbc:postgresql://${POSTGRES_DB_HOSTNAME}:${POSTGRES_DB_PORT}/jobservice",
+					"JOB_DATABASE_USERNAME": "${POSTGRES_JOB_SERVICE_DB_USER}",
+					"JOB_DATABASE_PASSWORD": "${POSTGRES_JOB_SERVICE_DB_PASSWORD}",
+					"CAF_RABBITMQ_HOST": "${CAF_RABBITMQ_HOST}",
+					"CAF_RABBITMQ_PORT": "${CAF_RABBITMQ_PORT}",
+					"CAF_RABBITMQ_USERNAME": "${CAF_RABBITMQ_USERNAME}",
+					"CAF_RABBITMQ_PASSWORD": "${CAF_RABBITMQ_PASSWORD}"
+				},
+				"healthChecks": [{
+					"path": "/healthcheck",
+					"protocol": "HTTP",
+					"portIndex": 1,
+					"gracePeriodSeconds": 300,
+					"intervalSeconds": 120,
+					"maxConsecutiveFailures": 5,
+					"timeoutSeconds": 20
+				}],
+				"labels": {
+                    "autoscale.metric": "rabbitmq",
+                    "autoscale.scalingtarget": "jobtracking-in",
+                    "autoscale.scalingprofile": "default",
+                    "autoscale.maxinstances": "4",
+                    "autoscale.mininstances": "0",
+                    "autoscale.interval": "30",
+                    "autoscale.backoff": "10"
 				}
-			},
-			"env": {
-				"_JAVA_OPTIONS": "-Xms512m -Xmx512m",
-				"CAF_WORKER_INPUT_QUEUE": "${jobtracking_inputqueue}",
-				"CAF_WORKER_OUTPUT_QUEUE": "${jobtracking_outputqueue}",
-				"JOB_DATABASE_URL": "jdbc:postgresql://${postgres_db_hostname}:${postgres_db_port}/jobservice",
-				"JOB_DATABASE_USERNAME": "${postgres_job_service_db_user}",
-				"JOB_DATABASE_PASSWORD": "${postgres_job_service_db_password}",
-				"CAF_RABBITMQ_HOST": "${rabbit_host}",
-				"CAF_RABBITMQ_PORT": "${rabbit_port}",
-				"CAF_RABBITMQ_USERNAME": "${rabbit_user}",
-				"CAF_RABBITMQ_PASSWORD": "${rabbit_password}"
-				
-			},
-			"healthChecks": [{
-				"path": "/healthcheck",
-				"protocol": "HTTP",
-				"portIndex": 1,
-				"gracePeriodSeconds": 300,
-				"intervalSeconds": 120,
-				"maxConsecutiveFailures": 5,
-				"timeoutSeconds": 20
-			}],
-			"labels": {
-				"autoscale.maxinstances": "4",
-				"autoscale.metric": "rabbitmq",
-				"autoscale.mininstances": "1",
-				"autoscale.scalingprofile": "default",
-				"autoscale.scalingtarget": "1",
-				"autoscale.interval": "30",
-				"autoscale.backoff": "10"
-			}
-		}
-	]
+			}]
+	}]
 }
