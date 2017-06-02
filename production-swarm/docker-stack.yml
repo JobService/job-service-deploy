@@ -5,10 +5,10 @@ services:
       - ./rabbitmq.env
       - ./postgres.env
     environment:
-      CAF_DATABASE_USERNAME: "${CAF_DATABASE_USERNAME:-postgres}"
-      CAF_DATABASE_PASSWORD: "${CAF_DATABASE_PASSWORD:-root}"
+      CAF_DATABASE_USERNAME: "${CAF_DATABASE_USERNAME}"
+      CAF_DATABASE_PASSWORD: "${CAF_DATABASE_PASSWORD}"
       CAF_STATUS_CHECK_TIME: 5
-      CAF_TRACKING_PIPE: "${CAF_TRACKING_PIPE_IN:-jobtracking-in}"
+      CAF_TRACKING_PIPE: jobtracking-in
       CAF_WEBSERVICE_URL: http://jobservice:9411/job-service/v1
     image: jobservice/job-service:latest
     deploy:
@@ -34,10 +34,10 @@ services:
       - ./rabbitmq.env
       - ./postgres.env      
     environment:
-      CAF_WORKER_INPUT_QUEUE: "${CAF_TRACKING_PIPE_IN:-jobtracking-in}"
-      CAF_WORKER_OUTPUT_QUEUE: "${CAF_TRACKING_PIPE_OUT:-jobtracking-out}"
-      JOB_DATABASE_USERNAME: "${CAF_DATABASE_USERNAME:-postgres}"
-      JOB_DATABASE_PASSWORD: "${CAF_DATABASE_PASSWORD:-root}"
+      CAF_WORKER_INPUT_QUEUE: jobtracking-in
+      CAF_WORKER_OUTPUT_QUEUE: jobtracking-out
+      JOB_DATABASE_USERNAME: "${CAF_DATABASE_USERNAME}"
+      JOB_DATABASE_PASSWORD: "${CAF_DATABASE_PASSWORD}"
     image: jobservice/worker-jobtracking:latest
     deploy:
       restart_policy:
