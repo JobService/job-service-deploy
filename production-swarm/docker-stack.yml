@@ -4,7 +4,6 @@ services:
     env_file:
       - ./rabbitmq.env
       - ./postgres.env
-      - ./jobservice.env
     environment:
       CAF_DATABASE_USERNAME: "${CAF_DATABASE_USERNAME:-postgres}"
       CAF_DATABASE_PASSWORD: "${CAF_DATABASE_PASSWORD:-root}"
