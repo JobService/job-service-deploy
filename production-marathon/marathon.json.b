@@ -15,7 +15,7 @@
 							"containerPort": 8080,
 							"hostPort": 0,
 							"protocol": "tcp",
-							"servicePort": ${JOB_SERVICE_PORT}
+							"servicePort": ${JOB_SERVICE_8080_SERVICE_PORT}
 						}],
 						"forcePullImage": true
 					},
@@ -45,7 +45,7 @@
 			},
 			{
 				"id": "jobtracking",
-				"cpus": 0.1,
+				"cpus": 0.5,
 				"mem": 1024,
 				"instances": 1,
 				"container": {
@@ -58,13 +58,13 @@
 								"containerPort": 8080,
 								"hostPort": 0,
 								"protocol": "tcp",
-								"servicePort": 9330
+								"servicePort": ${JOB_TRACKING_8080_SERVICE_PORT}
 							},
 							{
 								"containerPort": 8081,
 								"hostPort": 0,
 								"protocol": "tcp",
-								"servicePort": ${JOB_TRACKING_SERVICE_PORT}
+								"servicePort": ${JOB_TRACKING_8081_SERVICE_PORT}
 							}
 						]
 					}

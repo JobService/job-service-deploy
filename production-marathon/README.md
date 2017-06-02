@@ -1,20 +1,22 @@
 # Production Marathon Deployment
 
-The Production Marathon deployment supports the deployment of the CAF Job Service on Mesos/Marathon. This folder contains the marathon environment and template files that are required to deploy the service application.
+The Production Marathon deployment supports the deployment of the Job Service on Mesos/Marathon. This folder contains the marathon environment and template files that are required to deploy both the Job Service and Job Tracking applications.
 
 ## Service Configuration
 
 ### Marathon Template
-The `marathon.json.b` template file describes the marathon deployment information required for Job Service. The template file uses property substitution to get values for configurable properties **required** for service deployment. These properties are configured in the marathon environment file `marathon.env`.
+The `marathon.json.b` template file describes the marathon deployment information required for starting both the Job Service and Job Tracking workers. The template file uses property substitution to get values for configurable properties **required** for service deployment. These properties are configured in the marathon environment file `marathon.env`.
 
 ### Marathon Environment
 The `marathon.env` file supports configurable property settings necessary for service deployment. These include:
 
-- `DOCKER_REGISTRY`: This setting configures the docker repository that the Job Service image will be pulled from. 
+- `DOCKER_REGISTRY`: This setting configures the docker repository that pulls the Job Service and Job Tracking images.
 
-- `JOB_SERVICE_PORT`: This configures the port that the Job Service listens on. 
+- `JOB_SERVICE_8080_SERVICE_PORT`: This configures the service port that the Job Service listens on. 
 
-- `JOB_TRACKING_SERVICE_PORT`: This configures the port that the Job Tracking worker listens on
+- `JOB_TRACKING_8080_SERVICE_PORT`: This configures the service port that the Job Tracking worker port 8080 listens on
+
+- `JOB_TRACKING_8081_SERVICE_PORT`: This configures the service port that the Job Tracking worker port 8081 listens on
 
 - `POSTGRES_DB_HOSTNAME`: This configures the host name for the Postgres database.
 
@@ -38,10 +40,7 @@ The `marathon.json.b` deployment template file specifies default values for a nu
 
 ##### Application CPU, Memory and Instances
 
-- `cpus` : This setting can be used to configure the amount of CPU of each Job Service and Job Tracking container. This does not have to be a whole number. 
-	- **Default Values:**
-		- **Job Service: 0.5**
-		- **Job Tracking: 0.1**
+- `cpus` : This setting can be used to configure the amount of CPU of each Job Service and Job Tracking container. This does not have to be a whole number. **Default Value: 0.5**
 
 
 - `mem`: This configures the amount of RAM of each Job Service and Job Tracking container. Note that this property does not configure the amount of RAM available to the container but is instead an upper limit. If the container's RAM exceeds this value it will cause docker to destroy and restart the container. **Default Value: 1024**
