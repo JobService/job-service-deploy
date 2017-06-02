@@ -194,7 +194,9 @@ You can generate a default keystore setting both the keystore password and key p
 
 `keytool -genkey -alias tomcat -keystore .keystore -keyalg RSA`
 
-Generating a custom keystore with your own password/alias/protocol is not currently supported. For more information on generating keystores see these [instructions](https://tomcat.apache.org/tomcat-7.0-doc/ssl-howto.html).
+For more information on generating keystores see these [instructions](https://tomcat.apache.org/tomcat-7.0-doc/ssl-howto.html).
+
+If you have generated the keystore with custom keystore pass, alias or key pass, you must set the environment variables described below.
 
 Place this keystore file in a folder called `keystore` in job-service-deploy. Name it `.keystore` or else provide your own custom path by setting `JOB_SERVICE_KEYSTORE` (e.g. `./mykeystore/ks.p12`).
 
@@ -222,4 +224,20 @@ Additional override parameters can be set and their function is described below.
     <td>./keystore/.keystore</td>
     <td>If you are activating the HTTPS port, you can override the default keystore location to provide your own keystore as a volume. This is the path of the keystore file (i.e. `./mykeystore/ks.p12`).</td>
   </tr>
+  <tr>
+    <td>JOB_SERVICE_KEYSTOREPASS</td>
+    <td>changeit</td>
+    <td>Set this environment variable to the keystore pass set when creating the keystore. The default assumes you have set the default "changeit" pass when creating the keystore.</td>
+  </tr>
+  <tr>
+    <td>JOB_SERVICE_KEY_PASS</td>
+    <td>changeit</td>
+    <td>Set this environment variable to the key pass set when creating the keystore, which may be different from the keystore pass. The default is "changeit".</td>
+  </tr>
+  <tr>
+    <td>JOB_SERVICE_KEYSTORE_ALIAS</td>
+    <td>tomcat</td>
+    <td>If you generated your keystore with a custom keystore alias, use this environment variable to update the Job Service's keystore configuration in the `server.xml`</td>
+  </tr>
 </table>
+
