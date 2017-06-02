@@ -1,25 +1,22 @@
 # Production Docker Swarm Deployment
 
-The Production Docker Stack Deployment supports the deployment of the CAF Job Service on Docker Swarm. This folder contains the `docker-stack.yml` file and an environment file for the Docker Stack deployment in addition to an environment file for RabbitMQ.
+The Production Docker Stack Deployment supports the deployment of the Job Service on Docker Swarm. This folder contains the `docker-stack.yml` file and environment files for RabbitMQ and Postgres.
 
 ## Service Configuration
 
 ### Docker Stack
-The `docker-stack.yml` file describes the Docker deployment information required for the CAF Job Service. The file uses property substitution to retrieve values from Environment variables. A number of these Environment variables are **required** for the Job Service deployment. These Environment variable are configurable in the Docker environment file.
+The `docker-stack.yml` file describes the Docker deployment information required for the Job Service. The file uses property substitution to retrieve values from Environment variables. A number of these Environment variables are **required** for the Job Service deployment. These Environment variable are configurable in the RabbitMQ and Postgres environment files.
 
 ### Docker Environment
-The `docker-stack.env` file supports configurable property settings necessary for service deployment. These include:  
+The `rabbit.env` file supports configurable property settings necessary for service deployment.  
+* `CAF_RABBITMQ_HOST` : RabbitMQ Host  
+* `CAF_RABBITMQ_PORT` : RabbitMQ Port  
+* `CAF_RABBITMQ_USERNAME` : RabbitMQ Username  
+* `CAF_RABBITMQ_PASSWORD` : RabbitMQ Password  
 
-**Required**  
-* `POSTGRES_DB_HOSTNAME` : Hostname of the Postgres DB Server  
-
-**Smart Defaults**  
-* `POSTGRES_DB_PORT` : Port number of the Postgres DB Server. Will default to "5432"  
-* `CAF_DATABASE_USERNAME` : Username of the Postgres DB Server. Will default to "postgres"  
-* `CAF_DATABASE_PASSWORD` : Password of the Postgres DB Server. Will default to "root"  
-* `CAF_TRACKING_PIPE_IN` : Job Service Tracking Pipe In. Will default to "jobtracking-in"  
-* `CAF_TRACKING_PIPE_OUT` : Job Service Tracking Pipe Out. Will default to "jobtracking-out"  
-* `JOB_SERVICE_PORT` : Job Service Port. Will default to "9411"  
+The `postgres.env` file supports configurable property settings necessary for service deployment.  
+* `CAF_DATABASE_URL` : Postgres DB URL used for Job Service  
+* `JOB_DATABASE_URL` : Postgres DB URL used for Job Tracking Worker  
 
 ### Additional Docker Configuration
 The `docker-stack.yml` file specifies default values for a number of additional settings which you may choose to modify directly for your custom deployment. These include:  
@@ -49,7 +46,6 @@ The `docker-stack.yml` file specifies default values for a number of additional 
 To deploy the stack:  
 * Edit `rabbit.env`  
 * Edit `docker-stack.env`  
-* `source docker-stack.env`  
 * `docker stack deploy --compose-file=docker-stack.yml jobServiceProd`  
 
 To tear down the stack:  

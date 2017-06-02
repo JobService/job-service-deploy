@@ -10,6 +10,7 @@ services:
       CAF_DATABASE_PASSWORD: "${CAF_DATABASE_PASSWORD:-root}"
       CAF_STATUS_CHECK_TIME: 5
       CAF_TRACKING_PIPE: "${CAF_TRACKING_PIPE_IN:-jobtracking-in}"
+      CAF_WEBSERVICE_URL: http://jobservice:9411/job-service/v1
     image: jobservice/job-service:latest
     deploy:
       restart_policy:
