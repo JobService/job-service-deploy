@@ -1,22 +1,22 @@
 # Production Marathon Deployment
 
-The Production Marathon deployment supports the deployment of the Job Service on Mesos/Marathon. This folder contains the marathon environment and template files that are required to deploy both the Job Service and Job Tracking applications.
+The Production Marathon deployment supports the deployment of the Job Service on Mesos/Marathon. This folder contains the marathon environment and template files that are required to deploy both the Job Service and Job Tracking Worker.
 
 ## Service Configuration
 
 ### Marathon Template
-The `marathon.json.b` template file describes the marathon deployment information required for starting both the Job Service and Job Tracking workers. The template file uses property substitution to get values for configurable properties **required** for service deployment. These properties are configured in the marathon environment file `marathon.env`.
+The `marathon.json.b` template file describes the marathon deployment information required for starting both the Job Service and Job Tracking Worker. The template file uses property substitution to get values for configurable properties **required** for service deployment. These properties are configured in the marathon environment file `marathon.env`.
 
 ### Marathon Environment
 The `marathon.env` file supports configurable property settings necessary for service deployment. These include:
 
 - `DOCKER_REGISTRY`: This setting configures the docker repository that pulls the Job Service and Job Tracking images.
 
-- `JOB_SERVICE_8080_SERVICE_PORT`: This configures the service port that the Job Service listens on. 
+- `JOB_SERVICE_8080_SERVICE_PORT`: This configures the external port number on the host machine that will be forwarded to the Job Service containers internal 8080 port. This port is used to call the Job Service web service. 
 
-- `JOB_TRACKING_8080_SERVICE_PORT`: This configures the service port that the Job Tracking worker port 8080 listens on
+- `JOB_TRACKING_8080_SERVICE_PORT`: This configures the external port number on the host machine that will be forwarded to the Job Tracking workers internal 8080 port. This port is used to call the workers health check.
 
-- `JOB_TRACKING_8081_SERVICE_PORT`: This configures the service port that the Job Tracking worker port 8081 listens on
+- `JOB_TRACKING_8081_SERVICE_PORT`: This configures the external port number on the host machine that will be forwarded to the Job Tracking workers internal 8081 port. This port is used to retrieve metrics from the worker.
 
 - `POSTGRES_DB_HOSTNAME`: This configures the host name for the Postgres database.
 
@@ -26,9 +26,9 @@ The `marathon.env` file supports configurable property settings necessary for se
 
 - `POSTGRES_JOB_SERVICE_DB_PASSWORD`: The password for the Postgres database.
 
-- `CAF_RABBITMQ_HOST`: This configures the host for RabbitMQ.
+- `CAF_RABBITMQ_HOST`: This configures the host address for RabbitMQ.
 
-- `CAF_RABBITMQ_PORT`: This configures the port for RabbitMQ.
+- `CAF_RABBITMQ_PORT`: This configures the port where RabbitMQ is accepting messages.
 
 - `CAF_RABBITMQ_USERNAME`: This configures the username for RabbitMQ.
 
