@@ -41,6 +41,14 @@ services:
       CAF_BATCH_WORKER_ERROR_QUEUE: globfilter-err
       CAF_GLOB_WORKER_BINARY_DATA_INPUT_FOLDER: /mnt/caf-worker-input-dir
     image: jobservice/worker-globfilter:2.1.0
+    labels:
+      - autoscale.metric=rabbitmq
+      - autoscale.scalingtarget=globfilter-in
+      - autoscale.scalingprofile=default
+      - autoscale.maxinstances=4
+      - autoscale.mininstances=1
+      - autoscale.interval=30
+      - autoscale.backoff=10
     volumes:
       - worker-datastore:/mnt/caf-datastore-root
       - ${JOB_SERVICE_DEMO_INPUT_DIR:-./input-files}:/mnt/caf-worker-input-dir:ro
