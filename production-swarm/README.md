@@ -15,10 +15,8 @@ The `rabbit.env` file supports configurable property settings necessary for serv
 * `CAF_RABBITMQ_PASSWORD` : RabbitMQ Password  
 
 The `environment.sh` file supports configurable property settings necessary for service deployment.  
-* `JOBSERVICE_DB_HOST` IP Address or DNS of the Postgres DB used by the Job Service
-* `JOBSERVICE_DB_PORT` Port number for the Postgres DB used by the Job Service
-* `CAF_DATABASE_USERNAME` Username for the Postgres DB
-* `CAF_DATABASE_PASSWORD`Password for the Postgres DB
+* `JOBSERVICE_DB_HOST` IP Address or DNS of the Postgres DB used by the Job Service  
+* `JOBSERVICE_DB_PORT` Port number for the Postgres DB used by the Job Service  
 
 ### Additional Docker Configuration
 The `docker-stack.yml` file specifies default values for a number of additional settings which you may choose to modify directly for your custom deployment. These include:  
@@ -54,13 +52,12 @@ To deploy the stack:
 * Edit `environment.sh` to ensure the Job Service and the Job Tracking Worker are pointing at the correct Postgres DB instance  
   * export JOBSERVICE_DB_HOST=192.168.56.10  
   * export JOBSERVICE_DB_PORT=5432  
-  * export CAF_DATABASE_USERNAME=root  
-  * export CAF_DATABASE_PASSWORD=postgres  
   * Ensure the Job Service DB has been created in your Postgres instance. For more info see [here](https://github.com/JobService/job-service/tree/develop/job-service-postgres-container#external-job-service-database-install)
-* Edit `docker-stack.yml` as necessary to update the properties as required 
+* Edit `docker-stack.yml` as necessary to update the properties as required.  Equally additional environment variables can be added to the `environment.sh` and they will be substituted into the `docker-stack.yml` at deployment time.  
   * Ensure the versions of Job Service and Job Tracking Worker are correctly set
-* Execute `docker stack deploy --compose-file=docker-stack.yml jobServiceStack`
-* The Job Service and Job Tracking Worker containers will start up
+* Execute `source environment.sh`  
+* Execute `docker stack deploy --compose-file=docker-stack.yml jobServiceStack`  
+* The Job Service and Job Tracking Worker containers will start up  
 
 To tear down the stack:  
-* Execute `docker stack rm jobServiceStack`
+* Execute `docker stack rm jobServiceStack`  

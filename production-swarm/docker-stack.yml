@@ -32,7 +32,6 @@ services:
   worker-jobtracking:
     env_file:
       - ./rabbitmq.env
-      - ./postgres.env      
     environment:
       CAF_WORKER_INPUT_QUEUE: jobtracking-in
       CAF_WORKER_OUTPUT_QUEUE: jobtracking-out
@@ -55,4 +54,3 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
-

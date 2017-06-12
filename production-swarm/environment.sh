@@ -1,4 +1,5 @@
+#!/usr/bin/env bash
 export JOBSERVICE_DB_HOST=192.168.56.10
 export JOBSERVICE_DB_PORT=5432
-export CAF_DATABASE_USERNAME=root
-export CAF_DATABASE_PASSWORD=postgres
+export CAF_DATABASE_USERNAME=postgres
+export CAF_DATABASE_PASSWORD=root
