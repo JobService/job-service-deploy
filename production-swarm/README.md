@@ -5,7 +5,7 @@ The Production Docker Stack Deployment supports the deployment of the Job Servic
 ## Service Configuration
 
 ### Docker Stack
-The `docker-stack.yml` file describes the Docker deployment information required for the Job Service. The file uses property substitution to retrieve values from Environment variables. A number of these Environment variables are **required** for the Job Service deployment. These Environment variables are configurable in the RabbitMQ and Postgres environment files.
+The `docker-stack.yml` file describes the Docker deployment information required for the Job Service. The file uses property substitution to retrieve values from Environment variables. A number of these Environment variables are **required** for the Job Service deployment. These Environment variables are configurable in the RabbitMQ environment file and the environment.sh file.
 
 ### Docker Environment
 The `rabbit.env` file supports configurable property settings necessary for service deployment.  
@@ -14,9 +14,11 @@ The `rabbit.env` file supports configurable property settings necessary for serv
 * `CAF_RABBITMQ_USERNAME` : RabbitMQ Username  
 * `CAF_RABBITMQ_PASSWORD` : RabbitMQ Password  
 
-The `postgres.env` file supports configurable property settings necessary for service deployment.  
-* `CAF_DATABASE_URL` : Postgres DB URL used for Job Service  
-* `JOB_DATABASE_URL` : Postgres DB URL used for Job Tracking Worker  
+The `environment.sh` file supports configurable property settings necessary for service deployment.  
+* `JOBSERVICE_DB_HOST` IP Address or DNS of the Postgres DB used by the Job Service
+* `JOBSERVICE_DB_PORT` Port number for the Postgres DB used by the Job Service
+* `CAF_DATABASE_USERNAME` Username for the Postgres DB
+* `CAF_DATABASE_PASSWORD`Password for the Postgres DB
 
 ### Additional Docker Configuration
 The `docker-stack.yml` file specifies default values for a number of additional settings which you may choose to modify directly for your custom deployment. These include:  
@@ -45,15 +47,17 @@ The `docker-stack.yml` file specifies default values for a number of additional 
 
 To deploy the stack:  
 * Edit `rabbit.env` to ensure the Job Service and Job Tracking Worker are pointing at the correct RabbitMQ instance  
-  * CAF_RABBITMQ_HOST=rabbitmq
-  * CAF_RABBITMQ_PORT=5672
-  * CAF_RABBITMQ_USERNAME=guest
-  * CAF_RABBITMQ_PASSWORD=guest
-* Edit `postgres.env` to ensure the Job Service and the Job Tracking Worker are pointing at the correct Postgres DB by replacing \<POSTGRES_HOST\> and \<POSTGRES_PORT\>  
-  * CAF_DATABASE_URL=jdbc:postgresql://\<POSTGRES_HOST\>:\<POSTGRES_PORT\>/jobservice
-  * JOB_DATABASE_URL=jdbc:postgresql://\<POSTGRES_HOST\>:\<POSTGRES_PORT\>/jobservice
+  * CAF_RABBITMQ_HOST=rabbitmq  
+  * CAF_RABBITMQ_PORT=5672  
+  * CAF_RABBITMQ_USERNAME=guest  
+  * CAF_RABBITMQ_PASSWORD=guest  
+* Edit `environment.sh` to ensure the Job Service and the Job Tracking Worker are pointing at the correct Postgres DB instance  
+  * export JOBSERVICE_DB_HOST=192.168.56.10  
+  * export JOBSERVICE_DB_PORT=5432  
+  * export CAF_DATABASE_USERNAME=root  
+  * export CAF_DATABASE_PASSWORD=postgres  
   * Ensure the Job Service DB has been created in your Postgres instance. For more info see [here](https://github.com/JobService/job-service/tree/develop/job-service-postgres-container#external-job-service-database-install)
-* Edit `docker-stack.yml` as necessary to update the properties as required i.e. the _Postgres Username_ and _Password_
+* Edit `docker-stack.yml` as necessary to update the properties as required 
   * Ensure the versions of Job Service and Job Tracking Worker are correctly set
 * Execute `docker stack deploy --compose-file=docker-stack.yml jobServiceStack`
 * The Job Service and Job Tracking Worker containers will start up
