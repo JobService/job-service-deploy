@@ -11,12 +11,7 @@ services:
       CAF_TRACKING_PIPE: jobtracking-in
       CAF_WEBSERVICE_URL: "http://jobservice:${JOB_SERVICE_PORT:-9411}/job-service/v1"
     image: jobservice/job-service:latest
-    deploy:
-      restart_policy:
-        condition: any
-        delay: 5s
-        max_attempts: 3
-        window: 120s    
+    deploy:  
       mode: replicated
       replicas: 2
       resources:
@@ -39,12 +34,7 @@ services:
       JOB_DATABASE_USERNAME: "${CAF_DATABASE_USERNAME:-postgres}"
       JOB_DATABASE_PASSWORD: "${CAF_DATABASE_PASSWORD:-root}"
     image: jobservice/worker-jobtracking:latest
-    deploy:
-      restart_policy:
-        condition: any
-        delay: 5s
-        max_attempts: 3
-        window: 120s    
+    deploy:  
       mode: replicated
       replicas: 2
       resources:
