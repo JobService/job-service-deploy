@@ -4,14 +4,14 @@ services:
     env_file:
       - ./rabbitmq.env
     environment:
-      CAF_DATABASE_URL: "jdbc:postgresql://${JOBSERVICE_DB_HOST:-192.168.56.10}:${JOBSERVICE_DB_PORT:-5432}/jobservice"
-      CAF_DATABASE_USERNAME: "${CAF_DATABASE_USERNAME:-postgres}"
-      CAF_DATABASE_PASSWORD: "${CAF_DATABASE_PASSWORD:-root}"
+      CAF_DATABASE_URL: "jdbc:postgresql://${JOB_SERVICE_DB_HOST}:${JOB_SERVICE_DB_PORT}/jobservice"
+      CAF_DATABASE_USERNAME: "${CAF_DATABASE_USERNAME}"
+      CAF_DATABASE_PASSWORD: "${CAF_DATABASE_PASSWORD}"
       CAF_STATUS_CHECK_TIME: 5
       CAF_TRACKING_PIPE: jobtracking-in
-      CAF_WEBSERVICE_URL: "http://jobservice:${JOB_SERVICE_PORT:-9411}/job-service/v1"
-    image: jobservice/job-service:latest
-    deploy:  
+      CAF_WEBSERVICE_URL: "http://${JOB_SERVICE_DOCKER_HOST}:${JOB_SERVICE_PORT}/job-service/v1"
+    image: jobservice/job-service:2.1.0
+    deploy:
       mode: replicated
       replicas: 2
       resources:
@@ -22,7 +22,7 @@ services:
         parallelism: 1
         delay: 10s
     ports:
-      - "${JOB_SERVICE_PORT:-9411}:8080"
+      - "${JOB_SERVICE_PORT}:8080"
 
   worker-jobtracking:
     env_file:
@@ -30,11 +30,11 @@ services:
     environment:
       CAF_WORKER_INPUT_QUEUE: jobtracking-in
       CAF_WORKER_OUTPUT_QUEUE: jobtracking-out
-      JOB_DATABASE_URL: "jdbc:postgresql://${JOBSERVICE_DB_HOST:-192.168.56.10}:${JOBSERVICE_DB_PORT:-5432}/jobservice"
-      JOB_DATABASE_USERNAME: "${CAF_DATABASE_USERNAME:-postgres}"
-      JOB_DATABASE_PASSWORD: "${CAF_DATABASE_PASSWORD:-root}"
-    image: jobservice/worker-jobtracking:latest
-    deploy:  
+      JOB_DATABASE_URL: "jdbc:postgresql://${JOB_SERVICE_DB_HOST}:${JOB_SERVICE_DB_PORT}/jobservice"
+      JOB_DATABASE_USERNAME: "${CAF_DATABASE_USERNAME}"
+      JOB_DATABASE_PASSWORD: "${CAF_DATABASE_PASSWORD}"
+    image: jobservice/worker-jobtracking:2.1.0
+    deploy:
       mode: replicated
       replicas: 2
       resources:
