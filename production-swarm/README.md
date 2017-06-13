@@ -5,14 +5,9 @@ The Production Docker Stack Deployment supports the deployment of the Job Servic
 ## Service Configuration
 
 ### Docker Stack
-The `docker-stack.yml` file describes the Docker deployment information required for the Job Service. The file uses property substitution to retrieve values from Environment variables. A number of these Environment variables are **required** for the Job Service deployment. These Environment variables are configurable in the `environment.sh` file.
+The `docker-stack.yml` file describes the Docker deployment information required for the Job Service and Job Tracking Worker. The file uses property substitution to retrieve values from Environment variables. A number of these Environment variables are **required** for the Job Service deployment. These Environment variables are configurable in the `environment.sh` file.
 
 ### Docker Environment
-The `rabbit.env` file is used to share the RabbitMQ configuration across multiple services within the `docker-stack.yml`.
-* `CAF_RABBITMQ_HOST` : RabbitMQ Host  
-* `CAF_RABBITMQ_PORT` : RabbitMQ Port  
-* `CAF_RABBITMQ_USERNAME` : RabbitMQ Username  
-* `CAF_RABBITMQ_PASSWORD` : RabbitMQ Password  
 
 The `environment.sh` file supports configurable property settings necessary for service deployment.  
 ```  
@@ -43,7 +38,9 @@ export CAF_RABBITMQ_USERNAME=guest
 export CAF_RABBITMQ_PASSWORD=guest
 ```  
 
-The `environment.sh` file specifies default values for the settings which may require modifying depending on the deployment environment.
+The `environment.sh` file specifies default values for the environment variables, however these values may require modifying depending on the deployment environment.  
+
+The `rabbit.env` file is used to share the RabbitMQ configuration across multiple services within the `docker-stack.yml`.  
 
 #### Deploy
 
