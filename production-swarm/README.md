@@ -1,33 +1,53 @@
 # Production Docker Swarm Deployment
 
-The Production Docker Stack Deployment supports the deployment of the Job Service on Docker Swarm. This folder contains the `docker-stack.yml` file and environment files for RabbitMQ and Postgres.
+The Production Docker Stack Deployment supports the deployment of the Job Service on Docker Swarm. This folder contains the `docker-stack.yml` file a `rabbitmq.env` file and an `environment.sh` file.
 
 ## Service Configuration
 
 ### Docker Stack
-The `docker-stack.yml` file describes the Docker deployment information required for the Job Service. The file uses property substitution to retrieve values from Environment variables. A number of these Environment variables are **required** for the Job Service deployment. These Environment variables are configurable in the RabbitMQ environment file and the environment.sh file.
+The `docker-stack.yml` file describes the Docker deployment information required for the Job Service. The file uses property substitution to retrieve values from Environment variables. A number of these Environment variables are **required** for the Job Service deployment. These Environment variables are configurable in the `environment.sh` file.
 
 ### Docker Environment
-The `rabbit.env` file supports configurable property settings necessary for service deployment.  
+The `rabbit.env` file is used to share the RabbitMQ configuration across multiple services within the `docker-stack.yml`.
 * `CAF_RABBITMQ_HOST` : RabbitMQ Host  
 * `CAF_RABBITMQ_PORT` : RabbitMQ Port  
 * `CAF_RABBITMQ_USERNAME` : RabbitMQ Username  
 * `CAF_RABBITMQ_PASSWORD` : RabbitMQ Password  
 
 The `environment.sh` file supports configurable property settings necessary for service deployment.  
-* `JOBSERVICE_DB_HOST` IP Address or DNS of the Postgres DB used by the Job Service  
-* `JOBSERVICE_DB_PORT` Port number for the Postgres DB used by the Job Service  
+```  
+#!/usr/bin/env bash
 
-### Additional Docker Configuration
-The `docker-stack.yml` file specifies default values for a number of additional settings which you may choose to modify directly for your custom deployment. These include:  
+###
+# Job Service 
+###
+
+## Postgres Database Connection Details
+export JOB_SERVICE_DB_HOST=192.168.56.10
+export JOB_SERVICE_DB_PORT=5432
+export CAF_DATABASE_USERNAME=postgres
+export CAF_DATABASE_PASSWORD=root
+
+## Job Service Web Service Connection Details
+export JOB_SERVICE_PORT=9411
+export JOB_SERVICE_DOCKER_HOST=192.168.56.10
+
+###
+# RabbitMQ
+###
+
+## RabbitMQ Connection Details
+export CAF_RABBITMQ_HOST=192.168.56.10
+export CAF_RABBITMQ_PORT=5672
+export CAF_RABBITMQ_USERNAME=guest
+export CAF_RABBITMQ_PASSWORD=guest
+```  
+
+The `environment.sh` file specifies default values for the settings which may require modifying depending on the deployment environment.
 
 #### Deploy
 
-##### Restart Policy
-* `condition` : One of none, on-failure or any
-* `delay` : How long to wait between restart attempts, specified as a duration
-* `max_attempts` : How many times to attempt to restart a container before giving up
-* `window` : How long to wait before deciding if a restart has succeeded, specified as a duration
+The **Deploy** section of the `docker-stack.yml` contains a number of important settings which may require updating depending on the deployment environment.
 
 ##### Replicas
 * `mode` : Either global (exactly one container per swarm node) or replicated (a specified number of containers) (default replicated)
@@ -44,17 +64,10 @@ The `docker-stack.yml` file specifies default values for a number of additional 
 ## Execution
 
 To deploy the stack:  
-* Edit `rabbit.env` to ensure the Job Service and Job Tracking Worker are pointing at the correct RabbitMQ instance  
-  * CAF_RABBITMQ_HOST=rabbitmq  
-  * CAF_RABBITMQ_PORT=5672  
-  * CAF_RABBITMQ_USERNAME=guest  
-  * CAF_RABBITMQ_PASSWORD=guest  
 * Edit `environment.sh` to ensure the Job Service and the Job Tracking Worker are pointing at the correct Postgres DB instance  
-  * export JOBSERVICE_DB_HOST=192.168.56.10  
-  * export JOBSERVICE_DB_PORT=5432  
-  * Ensure the Job Service DB has been created in your Postgres instance. For more info see [here](https://github.com/JobService/job-service/tree/develop/job-service-postgres-container#external-job-service-database-install)
-* Edit `docker-stack.yml` as necessary to update the properties as required.  Equally additional environment variables can be added to the `environment.sh` and they will be substituted into the `docker-stack.yml` at deployment time.  
-  * Ensure the versions of Job Service and Job Tracking Worker are correctly set
+* Edit `environemnt.sh` to ensure the RabbitMQ configuration shared across both Job Service and Job Tracking Worker is correct  
+* Ensure the Job Service DB has been created in your Postgres instance. For more info see [here](https://github.com/JobService/job-service/tree/develop/job-service-postgres-container#external-job-service-database-install)
+* Ensure the versions of Job Service and Job Tracking Worker in `docker-stack.yml` are the correct version to be deployed
 * Execute `source environment.sh`  
 * Execute `docker stack deploy --compose-file=docker-stack.yml jobServiceStack`  
 * The Job Service and Job Tracking Worker containers will start up  
