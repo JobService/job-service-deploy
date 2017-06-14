@@ -1,6 +1,6 @@
 # Production Docker Swarm Deployment
 
-The Production Docker Stack Deployment supports the deployment of the Job Service on Docker Swarm. This folder contains the `docker-stack.yml` file a `rabbitmq.env` file and an `environment.sh` file.
+The Production Docker Stack Deployment supports the deployment of the Job Service on Docker Swarm. This folder contains the `docker-stack.yml` file, a `rabbitmq.env` file and an `environment.sh` file.
 
 ## Service Configuration
 
