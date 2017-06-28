@@ -223,3 +223,24 @@ Additional override parameters can be set and their function is described below.
     <td>If you are activating the HTTPS port, you can override the default keystore location to provide your own keystore as a volume. This is the path of the keystore file (i.e. `./mykeystore/ks.p12`).</td>
   </tr>
 </table>
+
+#### Providing your own server.xml
+
+You can provide your own server.xml in the same job-service-deploy directory by running the `docker-compose.serverxml.yml` override.
+
+`docker-compose -f docker-compose.yml -f docker-compose.https.yml -f docker-compose.serverxml.yml up`
+
+You can use a different path by setting the following environment variable to the location of the server.xml you want to provide:
+
+<table>
+  <tr>
+    <th>Environment Variable</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td>JOB_SERVICE_SERVER_XML</td>
+    <td>./server.xml</td>
+    <td>This is the relative path of the server.xml you want to provide.</td>
+  </tr>
+</table>
